@@ -1,0 +1,25 @@
+# Requires an ingress controller (ingress-nginx) and cert-manager with a "letsencrypt-prod" ClusterIssuer.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: coming-soon
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/proxy-body-size: "16k"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - coming-soon.example.com
+      secretName: coming-soon-tls
+  rules:
+    - host: coming-soon.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80

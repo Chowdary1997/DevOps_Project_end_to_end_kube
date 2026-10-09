@@ -1,0 +1,19 @@
+{
+  "name": "coming-soon-backend",
+  "version": "2.0.0",
+  "private": true,
+  "main": "src/server.js",
+  "engines": { "node": ">=20.6" },
+  "scripts": {
+    "dev": "node --env-file=../.env --watch src/server.js",
+    "start": "node src/server.js",
+    "migrate": "node --env-file=../.env src/db.js"
+  },
+  "dependencies": {
+    "express": "^4.21.1",
+    "express-rate-limit": "^7.4.1",
+    "helmet": "^8.0.0",
+    "nodemailer": "^6.9.16",
+    "pg": "^8.13.1"
+  }
+}

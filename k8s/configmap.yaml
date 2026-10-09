@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coming-soon-config
+data:
+  NODE_ENV: "production"
+  PORT: "3000"
+  PUBLIC_BASE_URL: "https://coming-soon.example.com"
+  POSTGRES_DB: "coming_soon"
+  POSTGRES_USER: "coming_soon"
+  DATABASE_SSL: "0"
+  DOUBLE_OPT_IN: "1"
+  PRIVACY_POLICY_VERSION: "2026-10-01"
+  LAUNCH_AT: "2026-12-01T09:00:00Z"
+  SMTP_HOST: "smtp.your-provider.com"
+  SMTP_PORT: "587"
+  SMTP_SECURE: "0"
+  MAIL_FROM: "Your Company <no-reply@example.com>"

@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Coming Soon | Your Brand</title>
+  <meta name="description" content="Something extraordinary is coming. Subscribe to be the first to know when we launch.">
+  <meta name="theme-color" content="#070914">
+  <link rel="preload" href="/assets/hero-bg.svg" as="image">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#subscribe">Skip to subscribe</a>
+  <div class="scene" aria-hidden="true"></div>
+
+  <header class="nav">
+    <a class="logo" href="/" aria-label="Your Brand home">
+      <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true">
+        <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7c9cff"/><stop offset="1" stop-color="#c39bff"/></linearGradient></defs>
+        <circle cx="16" cy="16" r="13" fill="none" stroke="url(#lg)" stroke-width="2"/>
+        <circle cx="16" cy="16" r="5" fill="url(#lg)"/>
+      </svg>
+      <span>Your Brand</span>
+    </a>
+    <span class="pill"><span class="dot" aria-hidden="true"></span>Launching soon</span>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p class="eyebrow reveal">A new chapter begins</p>
+      <h1 id="headline" class="reveal d1">Something <span class="gradient-text">extraordinary</span> is coming.</h1>
+      <p class="lead reveal d2">We are building a product that makes everyday work feel effortless. Be the first to know when the doors open.</p>
+
+      <div id="countdown" class="countdown reveal d3" hidden aria-label="Time until launch">
+        <div class="unit"><span data-unit="days">--</span><small>Days</small></div>
+        <div class="unit"><span data-unit="hours">--</span><small>Hours</small></div>
+        <div class="unit"><span data-unit="minutes">--</span><small>Minutes</small></div>
+        <div class="unit"><span data-unit="seconds">--</span><small>Seconds</small></div>
+      </div>
+      <p id="launch-date" class="date reveal d3">Launch date to be announced</p>
+
+      <section id="subscribe" class="card reveal d4" aria-labelledby="subscribe-title">
+        <h2 id="subscribe-title" class="sr-only">Get launch updates</h2>
+        <form id="subscribe-form" novalidate>
+          <label for="email">Email address</label>
+          <div class="row">
+            <input id="email" name="email" type="email" autocomplete="email" maxlength="254"
+                   placeholder="you@company.com" aria-describedby="email-error">
+            <button type="submit">Notify me</button>
+          </div>
+          <p id="email-error" class="field-error" role="alert"></p>
+
+          <fieldset class="prefs">
+            <legend>Notify me about</legend>
+            <label><input type="checkbox" name="notifyLaunch" checked> Launch day announcement</label>
+            <label><input type="checkbox" name="notifyUpdates" checked> Launch date changes</label>
+          </fieldset>
+
+          <label class="consent">
+            <input type="checkbox" name="consent">
+            <span>I agree to receive these emails and accept the privacy notice. I can unsubscribe at any time.</span>
+          </label>
+
+          <div class="hp" aria-hidden="true">
+            <label>Leave this field empty <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+          </div>
+
+          <p id="form-status" class="status" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+    </section>
+
+    <section class="features" aria-label="What to expect">
+      <article class="feature reveal d2">
+        <div class="icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c9d6ff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>
+        </div>
+        <h2>Built for speed</h2>
+        <p>Every page loads in a blink, so you spend your time on what matters.</p>
+      </article>
+      <article class="feature reveal d3">
+        <div class="icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c9d6ff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-3z"/><path d="m9 12 2 2 4-4"/></svg>
+        </div>
+        <h2>Private by design</h2>
+        <p>Your data is encrypted, minimal, and never shared without your consent.</p>
+      </article>
+      <article class="feature reveal d4">
+        <div class="icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c9d6ff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/></svg>
+        </div>
+        <h2>Ready for everyone</h2>
+        <p>Designed to work beautifully on every screen, from phones to large displays.</p>
+      </article>
+    </section>
+  </main>
+
+  <footer>&copy; <span id="year"></span> Your Brand. You only receive emails you opt into.</footer>
+</body>
+</html>

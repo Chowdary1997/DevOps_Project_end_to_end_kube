@@ -32,3 +32,22 @@ curl -X POST -H "Authorization: Bearer $ADMIN_TOKEN" http://localhost:8080/api/a
 ## Known gaps
 - Failed deliveries are recorded in `deliveries` but there is no re-queue job yet.
 - Tests, CI/CD and infrastructure-as-code are not included.
+
+## Testing
+
+| Level | Location | Command | What it proves |
+|---|---|---|---|
+| Unit | `backend/test/unit` | `npm run test:unit` | Pure logic: validation, tokens, hashing, retries, email content, config fail-fast |
+| API and integration | `backend/test/api` | `npm run test:api` | Real endpoints against real PostgreSQL and a real SMTP sink (Mailpit) |
+| Regression | `backend/test/regression` | `npm run test:regression` | Each fixed defect is pinned as `REG-0xx` so it cannot return |
+| End to end | `e2e` | `npx playwright test` | The browser journey: form, email, confirmation, mobile layout |
+| Load | `perf/subscribe.js` | `docker compose -f docker-compose.test.yml --profile perf run --rm k6` | Latency and error thresholds under concurrent load |
+
+Run everything the way Jenkins does:
+```
+docker compose -p coming-soon-ci -f docker-compose.test.yml --profile test up -d --build --wait db mailpit backend frontend
+docker compose -p coming-soon-ci -f docker-compose.test.yml --profile test run --rm api-tests
+docker compose -p coming-soon-ci -f docker-compose.test.yml --profile e2e run --rm e2e
+docker compose -p coming-soon-ci -f docker-compose.test.yml down -v
+```
+The `Jenkinsfile` runs these stages in order and publishes JUnit results from `backend/reports` and `reports`.

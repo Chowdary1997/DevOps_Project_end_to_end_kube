@@ -1,0 +1,113 @@
+# Disposable test environment: PostgreSQL, Mailpit (SMTP sink), backend, frontend, and test runners.
+# Runners sit behind profiles so they start only when the pipeline asks for them.
+name: coming-soon-test
+
+x-test-env: &test-env
+  NODE_ENV: test
+  DATABASE_URL: postgres://coming_soon:test_password@db:5432/coming_soon_test
+  DATABASE_SSL: "0"
+  PUBLIC_BASE_URL: http://frontend:8080
+  TRUST_PROXY: "1"
+  DOUBLE_OPT_IN: "1"
+  LAUNCH_AT: "2026-12-01T09:00:00Z"
+  IP_HASH_SALT: test-ip-salt-test-ip-salt-test-ip-salt-0000
+  ADMIN_TOKEN: test-admin-token-test-admin-token-000000
+  WEBHOOK_SECRET: test-webhook-secret-test-webhook-secret-00
+  SMTP_HOST: mailpit
+  SMTP_PORT: "1025"
+  SMTP_SECURE: "0"
+  MAIL_FROM: "Test Sender <test@example.test>"
+  MAILPIT_URL: http://mailpit:8025
+
+services:
+  db:
+    build: ./database
+    environment:
+      POSTGRES_DB: coming_soon_test
+      POSTGRES_USER: coming_soon
+      POSTGRES_PASSWORD: test_password
+    tmpfs:
+      - /var/lib/postgresql/data   # fresh database on every run
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d coming_soon_test -U coming_soon"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    networks: [test]
+
+  mailpit:
+    image: axllent/mailpit:latest   # pin a version in your registry mirror
+    networks: [test]
+
+  backend:
+    build: ./backend
+    environment: *test-env
+    depends_on:
+      db:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 3s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    networks: [test]
+
+  frontend:
+    build: ./frontend
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/healthz"]
+      interval: 3s
+      retries: 10
+    networks: [test]
+
+  api-tests:
+    image: node:22-bookworm-slim
+    profiles: [test]
+    working_dir: /app
+    volumes:
+      - ./backend:/app
+    environment:
+      <<: *test-env
+    depends_on:
+      backend:
+        condition: service_healthy
+    command: sh -c "npm ci --no-audit --no-fund && npm run test:api && npm run test:regression"
+    networks: [test]
+
+  e2e:
+    image: mcr.microsoft.com/playwright:v1.47.0-jammy
+    profiles: [e2e]
+    working_dir: /work
+    volumes:
+      - ./:/work
+    environment:
+      E2E_BASE_URL: http://frontend:8080
+      MAILPIT_URL: http://mailpit:8025
+      CI: "1"
+    depends_on:
+      frontend:
+        condition: service_healthy
+    command: sh -c "npm ci --no-audit --no-fund && npx playwright test"
+    networks: [test]
+
+  k6:
+    image: grafana/k6:0.54.0
+    profiles: [perf]
+    volumes:
+      - ./perf:/perf:ro
+    environment:
+      BASE_URL: http://backend:3000
+    command: run /perf/subscribe.js
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks: [test]
+
+networks:
+  test: {}

@@ -148,4 +148,4 @@ async function broadcast({ kind, campaignKey, eligibleColumn, extra = {} }) {
   return totals;
 }
 
-module.exports = { sendConfirmation, onActivated, broadcast };
+module.exports = { sendConfirmation, onActivated, broadcast, withRetry, buildCampaign };

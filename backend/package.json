@@ -1,13 +1,18 @@
 {
   "name": "coming-soon-backend",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "private": true,
   "main": "src/server.js",
-  "engines": { "node": ">=20.6" },
+  "engines": { "node": ">=22.3" },
   "scripts": {
     "dev": "node --env-file=../.env --watch src/server.js",
     "start": "node src/server.js",
-    "migrate": "node --env-file=../.env src/db.js"
+    "migrate": "node --env-file=../.env src/db.js",
+    "lint": "find src test -name '*.js' | xargs -n1 node --check",
+    "test": "npm run test:unit && npm run test:api && npm run test:regression",
+    "test:unit": "mkdir -p reports && node --env-file=.env.test --test --test-concurrency=1 --test-force-exit --test-reporter=spec --test-reporter-destination=stdout --test-reporter=junit --test-reporter-destination=reports/unit.xml test/unit/*.test.js",
+    "test:api": "mkdir -p reports && node --env-file=.env.test --test --test-concurrency=1 --test-force-exit --test-reporter=spec --test-reporter-destination=stdout --test-reporter=junit --test-reporter-destination=reports/api.xml test/api/*.test.js",
+    "test:regression": "mkdir -p reports && node --env-file=.env.test --test --test-concurrency=1 --test-force-exit --test-reporter=spec --test-reporter-destination=stdout --test-reporter=junit --test-reporter-destination=reports/regression.xml test/regression/*.test.js"
   },
   "dependencies": {
     "express": "^4.21.1",
